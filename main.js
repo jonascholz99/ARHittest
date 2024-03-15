@@ -64,10 +64,9 @@ function init()
 	
 	loader.load(`${basePath}assets/marker.png`, function( texture ) {
 		var material = new THREE.MeshBasicMaterial({ map: texture });
-		var geometry = new THREE.PlaneGeometry(1, 1);
+		var geometry = new THREE.PlaneGeometry(0.3, 0.3);
 
-		reticle = new THREE.Mesh( geometry, material );
-		reticle.rotateZ( -Math.PI );
+		reticle = new THREE.Mesh( geometry, material );		
 		reticle.matrixAutoUpdate = false;
 		reticle.visible = false;
 		scene.add( reticle );
