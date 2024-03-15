@@ -122,15 +122,15 @@ function render( timestamp, frame )
 				reticle.visible = true;
 				reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
 
-				// Erstellen einer Rotationsmatrix, die eine Drehung um die X-Achse repräsentiert
-				var rotationMatrix = new THREE.Matrix4();
-				rotationMatrix.makeRotationX(-Math.PI / 2);
+				// // Erstellen einer Rotationsmatrix, die eine Drehung um die X-Achse repräsentiert
+				// var rotationMatrix = new THREE.Matrix4();
+				// rotationMatrix.makeRotationX(-Math.PI / 2);
 
-				// Multiplizieren der Treffermatrix mit der Rotationsmatrix
-				reticle.matrix.multiply(rotationMatrix);
+				// // Multiplizieren der Treffermatrix mit der Rotationsmatrix
+				// reticle.matrix.multiply(rotationMatrix);
 
-				// Da die Position jetzt geändert wurde, muss die Matrix aktualisiert werden
-				reticle.matrixAutoUpdate = false;
+				// // Da die Position jetzt geändert wurde, muss die Matrix aktualisiert werden
+				// reticle.matrixAutoUpdate = false;
 			} else 
 			{
 				reticle.visible = false;
