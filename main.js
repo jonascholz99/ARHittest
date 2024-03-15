@@ -13,7 +13,7 @@ let hitTestSourceRequested = false;
 let basePath;
 
 if (window.location.hostname === "localhost") {  
-  basePath = "./ARHittest/"; 
+  basePath = "./ARHittest/public/"; 
 } else {
   basePath = "./"; // Pfad für Server
 }
