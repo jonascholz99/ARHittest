@@ -74,7 +74,7 @@ function init() {
             AR();
 
 			const url = `${basePath}splats/yona/yona_7000.splat`;
-            const splat = await SPLAT.Loader.LoadAsync(url, scene, (progress) => (console.log(Math.round(progress * 100))));
+            const splat = await SPLAT.Loader.LoadAsync(url, scene, (progress) => (updateLoadingProgress(Math.round(progress * 100))));
             
             // Transform it  
             const rotation = new SPLAT.Vector3(0, 0, 0);
@@ -261,8 +261,6 @@ function AR()
     function onSessionStarted( session ) {
         session.addEventListener( 'end', onSessionEnded );
         trenderer.xr.setSession( session );
-        button.style.display = 'none';
-        button.textContent = 'EXIT AR';
         currentSession = session;
         session.requestReferenceSpace('local').then((refSpace) => {
         xrRefSpace = refSpace;
@@ -271,8 +269,7 @@ function AR()
     }
     function onSessionEnded( /*event*/ ) {
         currentSession.removeEventListener( 'end', onSessionEnded );
-        trenderer.xr.setSession( null );
-        button.textContent = 'ENTER AR' ;
+        trenderer.xr.setSession( null );        
         currentSession = null;
     }
 }
@@ -303,3 +300,13 @@ function getXRSessionInit(mode, options) {
     }
     return newInit;
 }
+
+function updateLoadingProgress(progress) {  
+    var loadingProgressElement = document.getElementById('loadingProgress');
+    
+    loadingProgressElement.textContent = `Lädt... ${progress}%`;
+    
+    if (progress >= 100) {
+        loadingProgressElement.style.display = 'none';
+    }
+  }
