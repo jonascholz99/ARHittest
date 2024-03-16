@@ -20,7 +20,7 @@ renderer.backgroundColor = new SPLAT.Color32(0, 0, 0, 0);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 const scene = new SPLAT.Scene();
-scene.position = new SPLAT.Vector3(100, 0, 0);
+scene.position = new SPLAT.Vector3(0, 0, 0);
 const camera = new SPLAT.Camera();
 camera._position = new SPLAT.Vector3(0, 0, 0);
 camera._rotation = new SPLAT.Quaternion();
@@ -28,7 +28,6 @@ camera.data.fx =  2232 / 4;
 camera.data.fy =  2232 / 4;
 camera.data.near =  0.03;
 camera.data.far =  100;
-
 
 let container;
 let controller;
@@ -51,11 +50,6 @@ function init() {
 	tscene = new THREE.Scene();
 
 	tcamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
-
-	const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 3 );
-	light.position.set( 0.5, 1, 0.25 );
-	tscene.add( light );
-
 	//
 
 	trenderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
@@ -63,13 +57,6 @@ function init() {
 	trenderer.setSize( window.innerWidth, window.innerHeight );
 	trenderer.xr.enabled = true;
 	container.appendChild( trenderer.domElement );
-
-    trenderer.xr.addEventListener('sessionstart', function(ev) {
-        console.log('sessionstart', ev);
-    });
-    trenderer.xr.addEventListener('sessionend', function(ev) {
-        console.log('sessionend', ev);
-    });
 	//
 
 	document.body.appendChild( ARButton.createButton( trenderer, { requiredFeatures: [ 'hit-test' ] } ) );
@@ -81,6 +68,10 @@ function init() {
 	async function onSelect() {
 
 		if ( reticle.visible ) {
+            stopAnimate();    
+            reticle.visible = false;
+            controller.removeEventListener( 'select', onSelect );
+            AR();
 
 			const url = `${basePath}splats/yona/yona_7000.splat`;
             const splat = await SPLAT.Loader.LoadAsync(url, scene, (progress) => (console.log(Math.round(progress * 100))));
@@ -102,9 +93,8 @@ function init() {
                 requestAnimationFrame(frame);
               };
             
-            requestAnimationFrame(frame);
-		}
-
+            requestAnimationFrame(frame);            
+		}        
 	}
 
 	controller = trenderer.xr.getController( 0 );
@@ -149,19 +139,21 @@ function onWindowResize() {
 	tcamera.updateProjectionMatrix();
 
 	trenderer.setSize( window.innerWidth, window.innerHeight );
-
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 //
 
 function animate() {
 
-	trenderer.setAnimationLoop( render );
-
+	trenderer.setAnimationLoop( render );    
 }
 
-function render( timestamp, frame ) {
+function stopAnimate() {
+    trenderer.setAnimationLoop( null );
+}
 
+function render( timestamp, frame ) {        
 	if ( frame ) {
 
 		const referenceSpace = trenderer.xr.getReferenceSpace();
@@ -236,4 +228,78 @@ function onXRFrame(t, frame) {
         camera._rotation.z = -tcamera.quaternion.z;
         camera._rotation.w = tcamera.quaternion.w;
     }    
-  }
+}
+
+function AR() 
+{
+    var currentSession = null;
+  
+    if( currentSession == null )
+    {
+        let options = {
+        requiredFeatures: ['dom-overlay'],
+        domOverlay: { root: document.body },
+        };
+        var sessionInit = getXRSessionInit( 'immersive-ar', {
+        mode: 'immersive-ar',
+        referenceSpaceType: 'local', // 'local-floor'
+        sessionInit: options
+    });
+    
+    navigator.xr.requestSession( 'immersive-ar', sessionInit ).then( onSessionStarted );
+    } else {
+        currentSession.end();
+    }
+
+    trenderer.xr.addEventListener('sessionstart', function(ev) {
+        console.log('sessionstart', ev);
+    });
+    trenderer.xr.addEventListener('sessionend', function(ev) {
+        console.log('sessionend', ev);
+    });
+
+    function onSessionStarted( session ) {
+        session.addEventListener( 'end', onSessionEnded );
+        trenderer.xr.setSession( session );
+        button.style.display = 'none';
+        button.textContent = 'EXIT AR';
+        currentSession = session;
+        session.requestReferenceSpace('local').then((refSpace) => {
+        xrRefSpace = refSpace;
+        session.requestAnimationFrame(onXRFrame);
+        });
+    }
+    function onSessionEnded( /*event*/ ) {
+        currentSession.removeEventListener( 'end', onSessionEnded );
+        trenderer.xr.setSession( null );
+        button.textContent = 'ENTER AR' ;
+        currentSession = null;
+    }
+}
+
+function getXRSessionInit(mode, options) {
+    if ( options && options.referenceSpaceType ) {
+        trenderer.xr.setReferenceSpaceType( options.referenceSpaceType );
+    }
+    var space = (options || {}).referenceSpaceType || 'local-floor';
+    var sessionInit = (options && options.sessionInit) || {};
+  
+    // Nothing to do for default features.
+    if ( space == 'viewer' )
+        return sessionInit;
+    if ( space == 'local' && mode.startsWith('immersive' ) )
+        return sessionInit;
+  
+    // If the user already specified the space as an optional or required feature, don't do anything.
+    if ( sessionInit.optionalFeatures && sessionInit.optionalFeatures.includes(space) )
+        return sessionInit;
+    if ( sessionInit.requiredFeatures && sessionInit.requiredFeatures.includes(space) )
+        return sessionInit;
+  
+    var newInit = Object.assign( {}, sessionInit );
+    newInit.requiredFeatures = [ space ];
+    if ( sessionInit.requiredFeatures ) {
+        newInit.requiredFeatures = newInit.requiredFeatures.concat( sessionInit.requiredFeatures );
+    }
+    return newInit;
+}
