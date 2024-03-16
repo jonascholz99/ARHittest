@@ -60,17 +60,24 @@ function init()
 	controller.addEventListener( 'select', onSelect );
 	scene.add( controller );
 
-	var loader = new THREE.TextureLoader();
+	// var loader = new THREE.TextureLoader();
 	
-	loader.load(`${basePath}assets/marker.png`, function( texture ) {
-		var material = new THREE.MeshBasicMaterial({ map: texture });
-		var geometry = new THREE.PlaneGeometry(0.3, 0.3);
+	// loader.load(`${basePath}assets/marker.png`, function( texture ) {
+	// 	var material = new THREE.MeshBasicMaterial({ map: texture });
+	// 	var geometry = new THREE.PlaneGeometry(0.3, 0.3);
 
-		reticle = new THREE.Mesh( geometry, material );		
-		reticle.matrixAutoUpdate = false;
-		reticle.visible = false;
-		scene.add( reticle );
-	});		
+	// 	reticle = new THREE.Mesh( geometry, material );		
+	// 	reticle.matrixAutoUpdate = false;
+	// 	reticle.visible = false;
+	// 	scene.add( reticle );
+	// });		
+
+	let reticleMaterial = new THREE.MeshBasicMaterial();
+	let reticleGeometry = new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 );
+	reticle = new THREE.Mesh( reticleGeometry, reticleMaterial );
+	reticle.matrixAutoUpdate = false;
+	reticle.visible = false;
+	scene.add( reticle );
 
 	window.addEventListener( 'resize', onWindowResize );
 }
@@ -122,12 +129,12 @@ function render( timestamp, frame )
 				reticle.visible = true;
 				reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
 
-				// Erstellen einer Rotationsmatrix, die eine Drehung um die X-Achse repräsentiert
-				var rotationMatrix = new THREE.Matrix4();
-				rotationMatrix.makeRotationX(-Math.PI / 2);
+				// // Erstellen einer Rotationsmatrix, die eine Drehung um die X-Achse repräsentiert
+				// var rotationMatrix = new THREE.Matrix4();
+				// rotationMatrix.makeRotationX(-Math.PI / 2);
 
 				// Multiplizieren der Treffermatrix mit der Rotationsmatrix
-				reticle.matrix.multiply(rotationMatrix);
+				// reticle.matrix.multiply(rotationMatrix);
 
 				// // Da die Position jetzt geändert wurde, muss die Matrix aktualisiert werden
 				// reticle.matrixAutoUpdate = false;
