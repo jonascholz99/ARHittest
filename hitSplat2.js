@@ -88,16 +88,11 @@ function init() {
         const scale = new THREE.Vector3();
         reticle.matrix.decompose(position, quaternion, scale);
         
-        const translation = new SPLAT.Vector3(position.x, position.y, position.z);
-        console.log("Translation: " + translation);
-        console.log(tscene.position);
-        console.log(scene.position);
-        const scaling = new SPLAT.Vector3(0.5, 0.5, 0.5);        
-        splat.position = translation;
-        splat.scale = scaling;
-        splat.applyPosition();        
-        splat.applyScale();         
+        splat.scale = new SPLAT.Vector3(0.5, 0.5, 0.5);        
+        splat.position = new SPLAT.Vector3(position.x, position.y, position.z);
 
+        console.log(splat.position) 
+        console.log(splat.scale)        
         searchforhit = false;
         reticle.visible = false;
         controller.removeEventListener( 'select', onSelect );
@@ -271,10 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const updateCoordinateDisplay = (axis, value) => {
         document.getElementById(`value${axis.toUpperCase()}`).innerText = value;
-        coordinates[axis] = value;        
-        const translation = new SPLAT.Vector3(coordinates.x, coordinates.y, coordinates.z);
-        splat.position = translation;
-        splat.applyPosition();         
+        coordinates[axis] = value;                
         document.getElementById(`position`).innerText = splat.position;
     };
 
