@@ -1,8 +1,8 @@
 import * as SPLAT from 'gsplat';
 import * as THREE from 'three';
 
-const scale = 0.5
-const movement_scale = 5
+const scale = 1
+const movement_scale = 1
 const initial_z = 0
 
 // check path for local or github pages
@@ -242,7 +242,7 @@ function onXRFrame(t, frame) {
 
     trenderer.render( tscene, tcamera );  
     camera._position.x = scale*movement_scale*tcamera.position.x;
-    camera._position.y = -scale*movement_scale*tcamera.position.y-1;
+    camera._position.y = -scale*movement_scale*tcamera.position.y;
     camera._position.z = -scale*movement_scale*tcamera.position.z-initial_z;
     camera._rotation.x = tcamera.quaternion.x;
     camera._rotation.y = -tcamera.quaternion.y;
