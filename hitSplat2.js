@@ -270,8 +270,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const delta = value - lastValues[axis];        
         lastValues[axis] = value;        
 
-        document.getElementById(`value${axis.toUpperCase()}`).innerText = value;        
-        splat.position = new SPLAT.Vector3(splat.position.x + delta.x, splat.position.y + delta.y, splat.position.z + delta.z);            
+        if (splat && splat.position) {
+            switch (axis) {
+                case 'x':
+                    splat.position.x += delta; // Aktualisiere die X-Achse der Position um delta
+                    break;
+                case 'y':
+                    splat.position.y += delta; // Aktualisiere die Y-Achse der Position um delta
+                    break;
+                case 'z':
+                    splat.position.z += delta; // Aktualisiere die Z-Achse der Position um delta
+                    break;
+            }
+        }
+
+        document.getElementById(`value${axis.toUpperCase()}`).innerText = value;                
         document.getElementById(`position`).innerText = splat.position;
     };
 
