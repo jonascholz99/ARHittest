@@ -95,6 +95,8 @@ function init() {
         reticle.visible = false;
         controller.removeEventListener( 'select', onSelect );
 
+        document.getElementById(`position`).innerText = splat.position;
+        
         const frame = () => {
             renderer.render(scene, camera);
             requestAnimationFrame(frame);
@@ -265,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const updateCoordinateDisplay = (axis, value) => {
         document.getElementById(`value${axis.toUpperCase()}`).innerText = value;
         coordinates[axis] = value;    
-        splat.position = new SPLAT.Vector3(coordinates.x, coordinates.y, coordinates.z);            
+        splat.position += new SPLAT.Vector3(coordinates.x, coordinates.y, coordinates.z);            
         document.getElementById(`position`).innerText = splat.position;
     };
 
