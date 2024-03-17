@@ -2,7 +2,7 @@ import * as SPLAT from 'gsplat';
 import * as THREE from 'three';
 
 const scale = 1
-const movement_scale = 1
+const movement_scale = 5
 const initial_z = 0
 
 // check path for local or github pages
@@ -259,3 +259,28 @@ function updateLoadingProgress(progress) {
       loadingProgressElement.style.display = 'none';
   }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisiere Objekt zur Speicherung der Werte
+    let coordinates = { x: 0, y: 0, z: 0 };
+
+    const updateCoordinateDisplay = (axis, value) => {
+        document.getElementById(`value${axis.toUpperCase()}`).innerText = value;
+        coordinates[axis] = value;        
+        const translation = new SPLAT.Vector3(coordinates.x, coordinates.y, coordinates.z);
+        splat.position = translation;
+        splat.applyPosition(); 
+    };
+
+    document.getElementById('sliderX').oninput = function() {
+        updateCoordinateDisplay('x', this.value);
+    };
+
+    document.getElementById('sliderY').oninput = function() {
+        updateCoordinateDisplay('y', this.value);
+    };
+
+    document.getElementById('sliderZ').oninput = function() {
+        updateCoordinateDisplay('z', this.value);
+    };
+});
