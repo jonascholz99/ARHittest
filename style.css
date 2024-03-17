@@ -18,3 +18,38 @@ body {
     font-size: 14px;
   }
   
+  #slider-container {
+    position: fixed; /* Oder `absolute`, je nach Bedarf */
+    top: 10px; /* Abstand von oben */
+    right: 10px; /* Abstand von rechts */
+    width: 200px; /* Breite des Slider-Containers */
+}
+
+.slider-wrapper {
+    margin-bottom: 20px; /* Abstand zwischen den Slidern */
+}
+
+.slider {
+    width: 100%; /* Slider nimmt die volle Breite seines Containers ein */
+    transform: scale(0.8); /* Skaliert den Slider kleiner */
+    -webkit-appearance: none; /* Entfernt Standard-Styles für Sliders in WebKit/Blink-Browsern */
+    appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px; /* Breite des Slider-Handles */
+    height: 15px; /* Höhe des Slider-Handles */
+    background: #4CAF50; /* Farbe des Slider-Handles */
+    cursor: pointer; /* Cursor-Stil, wenn man über den Slider fährt */
+}
+
+.slider::-moz-range-thumb {
+    width: 15px; /* Breite des Slider-Handles */
+    height: 15px; /* Höhe des Slider-Handles */
+    background: #4CAF50; /* Farbe des Slider-Handles */
+    cursor: pointer; /* Cursor-Stil, wenn man über den Slider fährt */
+}
+
+/* Weitere Stile für den Slider-Track und andere Teile können hinzugefügt werden, um das Aussehen weiter anzupassen */

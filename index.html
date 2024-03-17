@@ -8,17 +8,22 @@
     <title>AR Hit Test</title>
   </head>
   <body>    
-    <h2>X Wert</h2>
-    <input type="range" min="-100" max="100" value="0" class="slider" id="sliderX">
-    <p>X: <span id="valueX">0</span></p>
-
-    <h2>Y Wert</h2>
-    <input type="range" min="-100" max="100" value="0" class="slider" id="sliderY">
-    <p>Y: <span id="valueY">0</span></p>
-
-    <h2>Z Wert</h2>
-    <input type="range" min="-100" max="100" value="0" class="slider" id="sliderZ">
-    <p>Z: <span id="valueZ">0</span></p>
+    <div id="slider-container">
+        <div class="slider-wrapper">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="sliderX">
+            <p>X: <span id="valueX">0</span></p>
+        </div>
+    
+        <div class="slider-wrapper">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="sliderY">
+            <p>Y: <span id="valueY">0</span></p>
+        </div>
+    
+        <div class="slider-wrapper">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="sliderZ">
+            <p>Z: <span id="valueZ">0</span></p>
+        </div>
+    </div>
 
     <div id="loadingProgress">Lädt... 0%</div> 
     <script type="module" src="/hitSplat2.js"></script>
