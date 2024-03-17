@@ -38,6 +38,8 @@ camera.data.fy =  2232 / 4;
 camera.data.near =  0.03;
 camera.data.far =  100;
 
+let splat;
+
 init();
 
 function onWindowResize() 
@@ -61,19 +63,8 @@ main();
 
 async function main() 
 {  
-    const url = `${basePath}splats/yona/yona_7000.splat`;
-    const splat = await SPLAT.Loader.LoadAsync(url, scene, (progress) => (updateLoadingProgress(Math.round(progress * 100))));
-
-    // Transform it  
-    const rotation = new SPLAT.Vector3(0, 0, 0);
-    const translation = new SPLAT.Vector3(-0.2, 0.2, 5);
-    const scaling = new SPLAT.Vector3(0.5, 0.5, 0.5);
-    splat.rotation = SPLAT.Quaternion.FromEuler(rotation);
-    splat.position = translation;
-    splat.scale = scaling;
-    splat.applyPosition();
-    splat.applyRotation();
-    splat.applyScale();    
+    const url = `${basePath}splats/yona/yona_7000_edit.splat`;
+    splat = await SPLAT.Loader.LoadAsync(url, scene, (progress) => (updateLoadingProgress(Math.round(progress * 100))));       
 }
 
 function init() {
@@ -91,6 +82,17 @@ function init() {
 
     function onSelect() {
         console.log("Click Select!");
+
+        // Transform it  
+        const rotation = new SPLAT.Vector3(0, 0, 0);
+        const translation = new SPLAT.Vector3(-0.2, 0.2, 5);
+        const scaling = new SPLAT.Vector3(0.5, 0.5, 0.5);
+        splat.rotation = SPLAT.Quaternion.FromEuler(rotation);
+        splat.position = translation;
+        splat.scale = scaling;
+        splat.applyPosition();
+        splat.applyRotation();
+        splat.applyScale(); 
 
         const frame = () => {
             renderer.render(scene, camera);
