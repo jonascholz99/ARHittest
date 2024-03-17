@@ -273,13 +273,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (splat && splat.position) {
             switch (axis) {
                 case 'x':
-                    splat.position.x += delta; // Aktualisiere die X-Achse der Position um delta
+                    splat.position.x += movement_scale*delta; // Aktualisiere die X-Achse der Position um delta
                     break;
                 case 'y':
-                    splat.position.y += delta; // Aktualisiere die Y-Achse der Position um delta
+                    splat.position.y += movement_scale*delta; // Aktualisiere die Y-Achse der Position um delta
                     break;
                 case 'z':
-                    splat.position.z += delta; // Aktualisiere die Z-Achse der Position um delta
+                    splat.position.z += movement_scale*delta; // Aktualisiere die Z-Achse der Position um delta
                     break;
             }
         }
