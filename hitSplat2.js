@@ -61,26 +61,26 @@ main();
 
 async function main() 
 {  
-  const url = `${basePath}splats/yona/yona_7000.splat`;
-  const splat = await SPLAT.Loader.LoadAsync(url, scene, (progress) => (updateLoadingProgress(Math.round(progress * 100))));
-  
-  // Transform it  
-  const rotation = new SPLAT.Vector3(0, 0, 0);
-  const translation = new SPLAT.Vector3(-0.2, 0.2, 5);
-  const scaling = new SPLAT.Vector3(1.5, 1.5, 1.5);
-  splat.rotation = SPLAT.Quaternion.FromEuler(rotation);
-  splat.position = translation;
-  splat.scale = scaling;
-  splat.applyPosition();
-  splat.applyRotation();
-  splat.applyScale();
+    const url = `${basePath}splats/yona/yona_7000.splat`;
+    const splat = await SPLAT.Loader.LoadAsync(url, scene, (progress) => (updateLoadingProgress(Math.round(progress * 100))));
 
-  const frame = () => {
+    // Transform it  
+    const rotation = new SPLAT.Vector3(0, 0, 0);
+    const translation = new SPLAT.Vector3(-0.2, 0.2, 5);
+    const scaling = new SPLAT.Vector3(0.5, 0.5, 0.5);
+    splat.rotation = SPLAT.Quaternion.FromEuler(rotation);
+    splat.position = translation;
+    splat.scale = scaling;
+    splat.applyPosition();
+    splat.applyRotation();
+    splat.applyScale();
+
+    const frame = () => {
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
-  };
+    };
 
-  requestAnimationFrame(frame);
+    requestAnimationFrame(frame);
 
 }
 
