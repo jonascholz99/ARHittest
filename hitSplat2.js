@@ -29,7 +29,7 @@ renderer.backgroundColor = new SPLAT.Color32(0, 0, 0, 0);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 const scene = new SPLAT.Scene();
-scene.position = new SPLAT.Vector3(100, 0, 0);
+scene.position = new SPLAT.Vector3(0, 0, 0);
 const camera = new SPLAT.Camera();
 camera._position = new SPLAT.Vector3(0, 0, 0);
 camera._rotation = new SPLAT.Quaternion();
@@ -80,9 +80,7 @@ function init() {
     trenderer.xr.enabled = true;
     container.appendChild( trenderer.domElement );
 
-    function onSelect() {
-        console.log("Click Select!");
-
+    function onSelect() {        
         // Transform it          
         const position = new THREE.Vector3();
         const quaternion = new THREE.Quaternion();
@@ -90,6 +88,9 @@ function init() {
         reticle.matrix.decompose(position, quaternion, scale);
         
         const translation = new SPLAT.Vector3(position.x, position.y, position.z);
+        console.log("Translation: " + translation);
+        console.log(tscene.position);
+        console.log(scene.position);
         const scaling = new SPLAT.Vector3(0.5, 0.5, 0.5);        
         splat.position = translation;
         splat.scale = scaling;
