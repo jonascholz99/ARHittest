@@ -10,12 +10,20 @@ let basePath;
 
 // Überprüfe den Hostnamen
 if (window.location.hostname === "localhost") {  
-  basePath = "./splatAR/public/"; // Pfad für Localhost
+    basePath = "./ARHittest/public/"; 
 } else {
-  basePath = "./"; // Pfad für Server
+    basePath = "./"; // Pfad für Server
 }
 
+let container;
 let trenderer, xrRefSpace, tscene, tcamera;
+let controller;
+
+let reticle;
+
+let hitTestSource = null;
+let hitTestSourceRequested = false;
+
 const renderer = new SPLAT.WebGLRenderer();
 renderer.backgroundColor = new SPLAT.Color32(0, 0, 0, 0);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -29,6 +37,7 @@ camera.data.fx =  2232 / 4;
 camera.data.fy =  2232 / 4;
 camera.data.near =  0.03;
 camera.data.far =  100;
+
 init();
 
 function onWindowResize() 
@@ -73,12 +82,25 @@ async function main()
 }
 
 function init() {
-  tscene = new THREE.Scene();
-  tcamera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 50 );
-  trenderer = new THREE.WebGLRenderer( {antialias: true, alpha: true });
-  trenderer.setPixelRatio( window.devicePixelRatio );
-  trenderer.setSize( window.innerWidth, window.innerHeight );
-  trenderer.xr.enabled = true;
+    container = document.createElement( 'div' );
+     document.body.appendChild( container );
+
+    tscene = new THREE.Scene();
+    tcamera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 50 );
+
+    trenderer = new THREE.WebGLRenderer( {antialias: true, alpha: true });
+    trenderer.setPixelRatio( window.devicePixelRatio );
+    trenderer.setSize( window.innerWidth, window.innerHeight );
+    trenderer.xr.enabled = true;
+    container.appendChild( trenderer.domElement );
+
+    function onSelect() {
+        console.log("Click Select!");
+    }
+
+	controller = trenderer.xr.getController( 0 );
+	controller.addEventListener( 'select', onSelect );
+	tscene.add( controller );
 }
 
 function AR() 
@@ -88,7 +110,7 @@ function AR()
   if( currentSession == null )
   {
     let options = {
-      requiredFeatures: ['dom-overlay'],
+      requiredFeatures: ['dom-overlay', 'hit-test'],
       domOverlay: { root: document.body },
     };
     var sessionInit = getXRSessionInit( 'immersive-ar', {
