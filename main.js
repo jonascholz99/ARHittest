@@ -120,7 +120,7 @@ function animate() {
 function render( timestamp, frame ) {
 
 	if ( frame ) {
-
+		
 		const referenceSpace = renderer.xr.getReferenceSpace();
 		const session = renderer.xr.getSession();
 

@@ -42,7 +42,10 @@ init();
 
 function onWindowResize() 
 {
-  renderer.setSize(window.innerWidth, window.innerHeight);
+    tcamera.aspect = window.innerWidth / window.innerHeight;
+	tcamera.updateProjectionMatrix();
+
+    trenderer.setSize(window.innerWidth, window.innerHeight);
 }
 window.addEventListener("resize", onWindowResize);
 
@@ -101,6 +104,14 @@ function init() {
 	controller = trenderer.xr.getController( 0 );
 	controller.addEventListener( 'select', onSelect );
 	tscene.add( controller );
+
+    reticle = new THREE.Mesh(
+        new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
+        new THREE.MeshBasicMaterial()
+    );
+    reticle.matrixAutoUpdate = false;
+    reticle.visible = false;
+    tscene.add( reticle );
 }
 
 function AR() 
@@ -178,19 +189,60 @@ function getXRSessionInit(mode, options) {
 }
 
 function onXRFrame(t, frame) {
-  const session = frame.session;
-  session.requestAnimationFrame(onXRFrame);
-  const baseLayer = session.renderState.baseLayer;
-  const pose = frame.getViewerPose(xrRefSpace);
+        
+    const session = frame.session;
+    session.requestAnimationFrame(onXRFrame);
+    const referenceSpace = trenderer.xr.getReferenceSpace();
 
-  trenderer.render( tscene, tcamera );  
-  camera._position.x = scale*movement_scale*tcamera.position.x;
-  camera._position.y = -scale*movement_scale*tcamera.position.y-1;
-  camera._position.z = -scale*movement_scale*tcamera.position.z-initial_z;
-  camera._rotation.x = tcamera.quaternion.x;
-  camera._rotation.y = -tcamera.quaternion.y;
-  camera._rotation.z = -tcamera.quaternion.z;
-  camera._rotation.w = tcamera.quaternion.w;
+    if ( hitTestSourceRequested === false ) {
+        
+        session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
+
+            session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
+
+                hitTestSource = source;                
+            } );
+        } );    
+        
+        session.addEventListener( 'end', function () {
+
+            hitTestSourceRequested = false;
+            hitTestSource = null;
+
+        } );
+
+        hitTestSourceRequested = true;
+    }
+
+    if ( hitTestSource ) {
+
+        const hitTestResults = frame.getHitTestResults( hitTestSource );
+
+        if ( hitTestResults.length ) {
+
+            const hit = hitTestResults[ 0 ];
+
+            reticle.visible = true;
+            reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
+
+        } else {
+
+            reticle.visible = false;
+
+        }
+    }
+
+    const baseLayer = session.renderState.baseLayer;
+    const pose = frame.getViewerPose(xrRefSpace);
+
+    trenderer.render( tscene, tcamera );  
+    camera._position.x = scale*movement_scale*tcamera.position.x;
+    camera._position.y = -scale*movement_scale*tcamera.position.y-1;
+    camera._position.z = -scale*movement_scale*tcamera.position.z-initial_z;
+    camera._rotation.x = tcamera.quaternion.x;
+    camera._rotation.y = -tcamera.quaternion.y;
+    camera._rotation.z = -tcamera.quaternion.z;
+    camera._rotation.w = tcamera.quaternion.w;
 }
 
 function updateLoadingProgress(progress) {  
