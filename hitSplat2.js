@@ -23,6 +23,7 @@ let reticle;
 
 let hitTestSource = null;
 let hitTestSourceRequested = false;
+let searchforhit = true;
 
 const renderer = new SPLAT.WebGLRenderer();
 renderer.backgroundColor = new SPLAT.Color32(0, 0, 0, 0);
@@ -97,6 +98,9 @@ function init() {
         splat.applyPosition();        
         splat.applyScale();         
 
+        searchforhit = false;
+        reticle.visible = false;
+        
         const frame = () => {
             renderer.render(scene, camera);
             requestAnimationFrame(frame);
@@ -219,7 +223,7 @@ function onXRFrame(t, frame) {
         hitTestSourceRequested = true;
     }
 
-    if ( hitTestSource ) {
+    if ( hitTestSource && searchforhit ) {
 
         const hitTestResults = frame.getHitTestResults( hitTestSource );
 
