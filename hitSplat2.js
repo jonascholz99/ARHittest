@@ -73,15 +73,7 @@ async function main()
     splat.scale = scaling;
     splat.applyPosition();
     splat.applyRotation();
-    splat.applyScale();
-
-    const frame = () => {
-    renderer.render(scene, camera);
-    requestAnimationFrame(frame);
-    };
-
-    requestAnimationFrame(frame);
-
+    splat.applyScale();    
 }
 
 function init() {
@@ -99,6 +91,14 @@ function init() {
 
     function onSelect() {
         console.log("Click Select!");
+
+        const frame = () => {
+            renderer.render(scene, camera);
+            requestAnimationFrame(frame);
+        };
+    
+        requestAnimationFrame(frame);
+    
     }
 
 	controller = trenderer.xr.getController( 0 );
