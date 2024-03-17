@@ -83,15 +83,17 @@ function init() {
     function onSelect() {
         console.log("Click Select!");
 
-        // Transform it  
-        const rotation = new SPLAT.Vector3(0, 0, 0);
-        const translation = new SPLAT.Vector3(-0.2, 0.2, 5);
-        const scaling = new SPLAT.Vector3(0.5, 0.5, 0.5);
-        splat.rotation = SPLAT.Quaternion.FromEuler(rotation);
+        // Transform it          
+        const position = new THREE.Vector3();
+        const quaternion = new THREE.Quaternion();
+        const scale = new THREE.Vector3();
+        reticle.matrix.decompose(position, quaternion, scale);
+        
+        const translation = new SPLAT.Vector3(position.x, position.y, position.z);
+        const scaling = new SPLAT.Vector3(0.5, 0.5, 0.5);        
         splat.position = translation;
         splat.scale = scaling;
-        splat.applyPosition();
-        splat.applyRotation();
+        splat.applyPosition();        
         splat.applyScale(); 
 
         const frame = () => {
