@@ -100,7 +100,8 @@ function init() {
 
         searchforhit = false;
         reticle.visible = false;
-        
+        controller.removeEventListener( 'select', onSelect );
+
         const frame = () => {
             renderer.render(scene, camera);
             requestAnimationFrame(frame);
