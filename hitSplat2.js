@@ -261,13 +261,17 @@ function updateLoadingProgress(progress) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialisiere Objekt zur Speicherung der Werte
-    let coordinates = { x: 0, y: 0, z: 0 };
+    // Initialisiere Objekt zur Speicherung der Werte    
+    let lastValues = { x: 0, y: 0, z: 0 };
 
-    const updateCoordinateDisplay = (axis, value) => {
-        document.getElementById(`value${axis.toUpperCase()}`).innerText = value;
-        coordinates[axis] = value;    
-        splat.position = new SPLAT.Vector3(splat.position.x + coordinates.x, splat.position.y + coordinates.y, splat.position.z + coordinates.z);            
+    const updateCoordinateDisplay = (axis, sliderValue) => {
+        const value = parseFloat(sliderValue);
+
+        const delta = value - lastValues[axis];        
+        lastValues[axis] = value;        
+
+        document.getElementById(`value${axis.toUpperCase()}`).innerText = value;        
+        splat.position = new SPLAT.Vector3(splat.position.x + delta.x, splat.position.y + delta.y, splat.position.z + delta.z);            
         document.getElementById(`position`).innerText = splat.position;
     };
 
