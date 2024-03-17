@@ -274,7 +274,8 @@ document.addEventListener('DOMContentLoaded', function() {
         coordinates[axis] = value;        
         const translation = new SPLAT.Vector3(coordinates.x, coordinates.y, coordinates.z);
         splat.position = translation;
-        splat.applyPosition(); 
+        splat.applyPosition();         
+        document.getElementById(`position`).innerText = splat.position;
     };
 
     document.getElementById('sliderX').oninput = function() {
