@@ -1,7 +1,7 @@
 import * as SPLAT from 'gsplat';
 import * as THREE from 'three';
 
-const scale = 1
+const scale = 0.5
 const movement_scale = 5
 const initial_z = 0
 
@@ -95,7 +95,7 @@ function init() {
         splat.position = translation;
         splat.scale = scaling;
         splat.applyPosition();        
-        splat.applyScale(); 
+        splat.applyScale();         
 
         const frame = () => {
             renderer.render(scene, camera);
