@@ -240,10 +240,14 @@ function onXRFrame(t, frame) {
     const baseLayer = session.renderState.baseLayer;
     const pose = frame.getViewerPose(xrRefSpace);
 
-    trenderer.render( tscene, tcamera );  
-    camera._position.x = scale*movement_scale*tcamera.position.x;
-    camera._position.y = -scale*movement_scale*tcamera.position.y;
-    camera._position.z = -scale*movement_scale*tcamera.position.z-initial_z;
+    trenderer.render( tscene, tcamera );
+    let x_position = scale*movement_scale*tcamera.position.x;
+    let y_position = -scale*movement_scale*tcamera.position.y;
+    let z_position = scale*movement_scale*tcamera.position.z-initial_z;
+    
+    let translation = new SPLAT.Vector3(x_position, y_position, z_position);
+    camera.position = camera.position.add(translation);
+    
     camera._rotation.x = tcamera.quaternion.x;
     camera._rotation.y = -tcamera.quaternion.y;
     camera._rotation.z = -tcamera.quaternion.z;
@@ -268,10 +272,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const value = parseFloat(sliderValue);
 
         const delta = value - lastValues[axis];        
-        lastValues[axis] = value;        
+        lastValues[axis] = value;
 
-        var delta_x = 0, delta_y= 0, delta_z = 0;
-        
+        let delta_x = 0, delta_y = 0, delta_z = 0;
+
         if (splat && splat.position) {
             switch (axis) {
                 case 'x':
@@ -287,8 +291,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         var translation = new SPLAT.Vector3(delta_x, delta_y, delta_z);
-        
-        splat.position.add(translation);
+
+        splat.position = splat.position.add(translation);
+        splat.applyPosition();
         
         document.getElementById(`value${axis.toUpperCase()}`).innerText = value;                
         document.getElementById(`position`).innerText = splat.position;
