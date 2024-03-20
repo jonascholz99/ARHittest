@@ -270,37 +270,27 @@ function updateLoadingProgress(progress) {
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisiere Objekt zur Speicherung der Werte    
-    let lastValues = { x: 0, y: 0, z: 0 };
+    let cumulativeTranslation = { x: 0, y: 0, z: 0 };
 
     const updateCoordinateDisplay = (axis, sliderValue) => {
         const value = parseFloat(sliderValue);
 
-        const delta = value - lastValues[axis];        
-        lastValues[axis] = value;
+        // Berechne die Veränderung basierend auf dem neuen Schiebereglerwert
+        const delta = value - cumulativeTranslation[axis];
 
-        let delta_x = 0, delta_y = 0, delta_z = 0;
+        // Aktualisiere die kumulative Verschiebung
+        cumulativeTranslation[axis] += delta;
 
-        if (splat && splat.position) {
-            switch (axis) {
-                case 'x':
-                    delta_x = delta; // Aktualisiere die X-Achse der Position um delta
-                    break;
-                case 'y':
-                    delta_y = delta; // Aktualisiere die Y-Achse der Position um delta
-                    break;
-                case 'z':
-                    delta_z = delta; // Aktualisiere die Z-Achse der Position um delta
-                    break;
-            }
-        }
+        // Erstelle eine neue Translation basierend auf der aktualisierten kumulativen Verschiebung
+        var translation = new SPLAT.Vector3(cumulativeTranslation.x, cumulativeTranslation.y, cumulativeTranslation.z);
 
-        var translation = new SPLAT.Vector3(delta_x, delta_y, delta_z);
-
-        splat.position = splat.position.add(translation);
+        // Wende die neue kumulative Verschiebung an
+        splat.position = translation;
         splat.applyPosition();
         
-        document.getElementById(`value${axis.toUpperCase()}`).innerText = value;                
-        document.getElementById(`position`).innerText = splat.position;
+        document.getElementById(`value${axis.toUpperCase()}`).innerText = value;
+        document.getElementById(`position`).innerText = `(${cumulativeTranslation.x.toFixed(2)}, ${cumulativeTranslation.y.toFixed(2)}, ${cumulativeTranslation.z.toFixed(2)})`;
+
     };
 
     document.getElementById('sliderX').oninput = function() {
