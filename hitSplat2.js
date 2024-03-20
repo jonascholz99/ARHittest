@@ -85,17 +85,16 @@ function init() {
         // Transform it          
         const position = new THREE.Vector3();
         const quaternion = new THREE.Quaternion();
-        const scale = new THREE.Vector3();
         reticle.matrix.decompose(position, quaternion, scale);
+                 
+        let translation = new SPLAT.Vector3(position.x, position.y, position.z);
         
-        splat.scale = new SPLAT.Vector3(0.5, 0.5, 0.5);        
-        splat.position = new SPLAT.Vector3(position.x, position.y, position.z);
-           
+        splat.position = translation;
+        splat.applyPosition();
+        
         searchforhit = false;
         reticle.visible = false;
         controller.removeEventListener( 'select', onSelect );
-
-        document.getElementById(`position`).innerText = splat.position;
 
         const frame = () => {
             renderer.render(scene, camera);
