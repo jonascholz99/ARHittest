@@ -4,6 +4,7 @@ import * as THREE from 'three';
 const scale = 1
 const movement_scale = 5
 const initial_z = 0
+const initial_y = 15
 
 // check path for local or github pages
 let basePath;
@@ -88,7 +89,7 @@ function init() {
         const scale = new THREE.Vector3();
         reticle.matrix.decompose(position, quaternion, scale);
 
-        splat.position = new SPLAT.Vector3(position.x, position.y, position.z);
+        splat.position = new SPLAT.Vector3(position.x, position.y-initial_y, position.z);
         splat.applyPosition();
         
         searchforhit = false;
