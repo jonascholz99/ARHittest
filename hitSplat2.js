@@ -241,12 +241,16 @@ function onXRFrame(t, frame) {
     const pose = frame.getViewerPose(xrRefSpace);
 
     trenderer.render( tscene, tcamera );
-    let x_position = scale*movement_scale*tcamera.position.x;
-    let y_position = -scale*movement_scale*tcamera.position.y;
-    let z_position = scale*movement_scale*tcamera.position.z-initial_z;
+    camera._position.x = scale*movement_scale*tcamera.position.x;
+    camera._position.y = -scale*movement_scale*tcamera.position.y;
+    camera._position.z = -scale*movement_scale*tcamera.position.z-initial_z;
     
-    let translation = new SPLAT.Vector3(x_position, y_position, z_position);
-    camera.position = camera.position.add(translation);
+    // let x_position = scale*movement_scale*tcamera.position.x;
+    // let y_position = -scale*movement_scale*tcamera.position.y;
+    // let z_position = scale*movement_scale*tcamera.position.z-initial_z;
+    //
+    // let translation = new SPLAT.Vector3(x_position, y_position, z_position);
+    // camera.position = camera.position.add(translation);
     
     camera._rotation.x = tcamera.quaternion.x;
     camera._rotation.y = -tcamera.quaternion.y;
