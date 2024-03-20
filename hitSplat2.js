@@ -4,7 +4,7 @@ import * as THREE from 'three';
 const scale = 1
 const movement_scale = 5
 const initial_z = 0
-const initial_y = 15
+const initial_y = -15
 
 // check path for local or github pages
 let basePath;
