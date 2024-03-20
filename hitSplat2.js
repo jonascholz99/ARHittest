@@ -2,7 +2,7 @@ import * as SPLAT from 'gsplat';
 import * as THREE from 'three';
 
 const scale = 1
-const movement_scale = 5
+const movement_scale = 2.5
 const initial_z = 0
 const initial_y = -15
 
@@ -89,8 +89,10 @@ function init() {
         const scale = new THREE.Vector3();
         reticle.matrix.decompose(position, quaternion, scale);
 
+        splat.scale = new SPLAT.Vector3(2, 2, 2);
         splat.position = new SPLAT.Vector3(position.x, position.y-initial_y, position.z);
         splat.applyPosition();
+        splat.applyScale();
         
         searchforhit = false;
         reticle.visible = false;
