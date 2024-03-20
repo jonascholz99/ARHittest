@@ -1,7 +1,7 @@
 import * as SPLAT from 'gsplat';
 import * as THREE from 'three';
 
-const scale = 10
+const scale = 1
 const movement_scale = 5
 const initial_z = 0
 
