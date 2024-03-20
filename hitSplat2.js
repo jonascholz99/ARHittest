@@ -65,7 +65,7 @@ main();
 
 async function main() 
 {  
-    const url = `${basePath}splats/yona/yona_7000_edit.splat`;
+    const url = `${basePath}splats/yona/yona_7000.splat`;
     splat = await SPLAT.Loader.LoadAsync(url, scene, (progress) => (updateLoadingProgress(Math.round(progress * 100))));       
 }
 
