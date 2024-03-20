@@ -270,20 +270,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const delta = value - lastValues[axis];        
         lastValues[axis] = value;        
 
+        var delta_x = 0, delta_y= 0, delta_z = 0;
+        
         if (splat && splat.position) {
             switch (axis) {
                 case 'x':
-                    splat.position.x += movement_scale*delta; // Aktualisiere die X-Achse der Position um delta
+                    delta_x = delta; // Aktualisiere die X-Achse der Position um delta
                     break;
                 case 'y':
-                    splat.position.y += movement_scale*delta; // Aktualisiere die Y-Achse der Position um delta
+                    delta_y = delta; // Aktualisiere die Y-Achse der Position um delta
                     break;
                 case 'z':
-                    splat.position.z += movement_scale*delta; // Aktualisiere die Z-Achse der Position um delta
+                    delta_z = delta; // Aktualisiere die Z-Achse der Position um delta
                     break;
             }
         }
 
+        var translation = new SPLAT.Vector3(delta_x, delta_y, delta_z);
+        
+        splat.position.add(translation);
+        
         document.getElementById(`value${axis.toUpperCase()}`).innerText = value;                
         document.getElementById(`position`).innerText = splat.position;
     };
