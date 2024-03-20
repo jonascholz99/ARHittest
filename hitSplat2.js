@@ -85,11 +85,10 @@ function init() {
         // Transform it          
         const position = new THREE.Vector3();
         const quaternion = new THREE.Quaternion();
+        const scale = new THREE.Vector3();
         reticle.matrix.decompose(position, quaternion, scale);
-                 
-        let translation = new SPLAT.Vector3(position.x, position.y, position.z);
-        
-        splat.position = translation;
+
+        splat.position = new SPLAT.Vector3(position.x, position.y, position.z);
         splat.applyPosition();
         
         searchforhit = false;
