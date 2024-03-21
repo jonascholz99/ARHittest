@@ -111,13 +111,31 @@ function init() {
 	controller.addEventListener( 'select', onSelect );
 	tscene.add( controller );
 
-    reticle = new THREE.Mesh(
-        new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
-        new THREE.MeshBasicMaterial()
+    var loader = new THREE.TextureLoader();
+
+    loader.load(
+        `${basePath}assets/DIMSPLAT_Marker.png`,
+        function( texture ) {
+            var material = new THREE.MeshBasicMaterial({ map: texture });
+            var geometry = new THREE.PlaneGeometry(0.3, 0.3).rotateX( - Math.PI / 2 );
+
+            reticle = new THREE.Mesh( geometry, material );
+            reticle.matrixAutoUpdate = false;
+            reticle.visible = false;
+            tscene.add( reticle );
+        },
+        undefined,
+        function(error) {
+            console.log("An error loading the marker occurred: " + error);
+            reticle = new THREE.Mesh(
+                new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
+                new THREE.MeshBasicMaterial()
+            );
+            reticle.matrixAutoUpdate = false;
+            reticle.visible = false;
+            tscene.add( reticle );
+        }
     );
-    reticle.matrixAutoUpdate = false;
-    reticle.visible = false;
-    tscene.add( reticle );
 }
 
 function AR() 
