@@ -91,6 +91,7 @@ function init() {
 
         splat.scale = new SPLAT.Vector3(2, 2, 2);
         splat.position = new SPLAT.Vector3(position.x, position.y-initial_y, position.z);
+        console.log(splat.rotation);
         splat.applyPosition();
         splat.applyScale();
         
@@ -104,6 +105,32 @@ function init() {
         };
     
         requestAnimationFrame(frame);
+
+        // Extrahieren der Daten aus SplatData
+        const positions = splat.data.positions; // Float32Array
+        const colors = splat.data.colors; // Uint8Array, optional
+
+        // Erstellen einer Three.js Geometrie
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        // Wenn Farben vorhanden sind, diese auch setzen
+        if (colors) {
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 4, true));
+        }
+
+        // Erstellen eines Materials, hier ein einfaches MeshBasicMaterial
+        const material = new THREE.MeshBasicMaterial({ vertexColors: true });
+
+        // Mesh erstellen
+        const mesh = new THREE.Mesh(geometry, material);
+
+        // Transformationen anwenden
+        mesh.position.set(splat.position.x, splat.position.y, splat.position.z);
+        mesh.quaternion.set(splat.rotation.x, splat.rotation.y, splat.rotation.z, splat.rotation.w);
+        mesh.scale.set(splat.scale.x, splat.scale.y, splat.scale.z);
+
+        // Mesh zur Szene hinzufügen
+        tscene.add(mesh);
     
     }
 
