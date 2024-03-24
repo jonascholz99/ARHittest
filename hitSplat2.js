@@ -2,9 +2,12 @@ import * as SPLAT from 'gsplat';
 import * as THREE from 'three';
 
 const scale = 1
-const movement_scale = 2.5
+const movement_scale = 2
 const initial_z = 0
 const initial_y = 0 //-15
+
+// track the transformation data of splat
+let appliedPosition, appliedRotation, appliedScale;
 
 // check path for local or github pages
 let basePath;
@@ -65,13 +68,17 @@ main();
 
 async function main() 
 {  
-    const url = `${basePath}splats/yona/yona_7000.splat`;
+    const url = `${basePath}splats/yona/yona_7000_edit.splat`;
     splat = await SPLAT.Loader.LoadAsync(url, scene, (progress) => (updateLoadingProgress(Math.round(progress * 100))));       
 }
 
 function init() {
     container = document.createElement( 'div' );
-     document.body.appendChild( container );
+    document.body.appendChild( container );
+    
+    appliedPosition = new THREE.Vector3(0, 0, 0);
+    appliedRotation = new THREE.Quaternion(0, 0, 0, 1);
+    appliedScale = new THREE.Vector3(1, 1, 1);
 
     tscene = new THREE.Scene();
     tcamera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 50 );
@@ -88,12 +95,20 @@ function init() {
         const quaternion = new THREE.Quaternion();
         const scale = new THREE.Vector3();
         reticle.matrix.decompose(position, quaternion, scale);
-
-        splat.scale = new SPLAT.Vector3(2, 2, 2);
+        
+        splat.scale = new SPLAT.Vector3(3, 3, 3);
         splat.position = new SPLAT.Vector3(position.x, position.y-initial_y, position.z);
-        console.log(splat.rotation);
+        
+        // save the transformation changes to view later
+        appliedPosition.add(position);
+        appliedRotation.multiplyQuaternions(quaternion, appliedRotation);
+        appliedScale.multiply(scale);
+        
+        
         splat.applyPosition();
         splat.applyScale();
+        
+        console.log("applied Position: " + appliedPosition.toString())
         
         searchforhit = false;
         reticle.visible = false;
@@ -106,31 +121,33 @@ function init() {
     
         requestAnimationFrame(frame);
 
-        // Extrahieren der Daten aus SplatData
-        const positions = splat.data.positions; // Float32Array
-        const colors = splat.data.colors; // Uint8Array, optional
+        const positions = splat.data.positions; // Float32Array der Positionen
+        const vertexCount = positions.length / 3;
 
-        // Erstellen einer Three.js Geometrie
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        // Wenn Farben vorhanden sind, diese auch setzen
-        if (colors) {
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 4, true));
+        let sumX = 0, sumY = 0, sumZ = 0;
+
+        // Durchlaufen der Vertices und Summieren der Koordinaten
+        for (let i = 0; i < positions.length; i += 3) {
+            sumX += positions[i];
+            sumY += positions[i + 1];
+            sumZ += positions[i + 2];
         }
 
-        // Erstellen eines Materials, hier ein einfaches MeshBasicMaterial
-        const material = new THREE.MeshBasicMaterial({ vertexColors: true });
+        // Berechnung des Mittelpunkts
+        const centerX = sumX / vertexCount;
+        const centerY = sumY / vertexCount;
+        const centerZ = sumZ / vertexCount;
 
-        // Mesh erstellen
-        const mesh = new THREE.Mesh(geometry, material);
+        // Erstellen eines Würfels (Cube) an dieser Position
+        const geometry = new THREE.BoxGeometry(1, 1, 1); // Größe des Würfels anpassen
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Farbe anpassen
+        const cube = new THREE.Mesh(geometry, material);
 
-        // Transformationen anwenden
-        mesh.position.set(splat.position.x, splat.position.y, splat.position.z);
-        mesh.quaternion.set(splat.rotation.x, splat.rotation.y, splat.rotation.z, splat.rotation.w);
-        mesh.scale.set(splat.scale.x, splat.scale.y, splat.scale.z);
+        // Setzen der berechneten Position des Cubes
+        cube.position.set(centerX, centerY, centerZ);
 
-        // Mesh zur Szene hinzufügen
-        tscene.add(mesh);
+        // Cube zur Szene hinzufügen
+        tscene.add(cube);
     
     }
 
