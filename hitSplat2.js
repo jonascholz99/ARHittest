@@ -4,7 +4,7 @@ import * as THREE from 'three';
 const scale = 1
 const movement_scale = 2
 const initial_z = 0
-const initial_y = 0 //-15
+const initial_y = -6 //-15
 
 // track the transformation data of splat
 let appliedPosition, appliedRotation, appliedScale;
